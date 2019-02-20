@@ -13,10 +13,12 @@ texts.each do |text|
   tf[text[0]] = {}
   word_count = 0
   natto.parse(text[0]) do |n|
-    if tf[text[0]][n.surface].nil?
-      tf[text[0]][n.surface] = 1
-    else
-      tf[text[0]][n.surface] += 1
+    if n.feature.split(',')[0] == '名詞'
+      if tf[text[0]][n.surface].nil?
+        tf[text[0]][n.surface] = 1
+      else
+        tf[text[0]][n.surface] += 1
+      end
     end
     word_count += 1
   end
