@@ -6,28 +6,52 @@ require './read_csv.rb'
 # 形態素解析
 natto = Natto::MeCab.new
 
-texts = read()
+# TF
+texts = read_all()
 tf = {}
 texts.each do |text|
   tf[text[0]] = {}
   word_count = 0
   natto.parse(text[0]) do |n|
-    if n.feature.split(',')[0] == '名詞'
-      if tf[text[0]][n.surface].nil?
-        tf[text[0]][n.surface] = 1
-      else
-        tf[text[0]][n.surface] += 1
-      end
-    word_count += 1
+    if tf[text[0]][n.surface].nil?
+      tf[text[0]][n.surface] = 1
+    else
+      tf[text[0]][n.surface] += 1
     end
+    word_count += 1
   end
   tf[text[0]].each do |word|
     tf[text[0]][word[0]] = word[1].to_f / word_count.to_f
   end
 end
 
-# JSON形式をparseする
-tf_json = JSON.pretty_generate(tf)
-file =  File.open("json/#{ARGV[0]}.json", "w+") do |text_json|
+# JSON
+a = tf.first(3)
+tf_json = JSON.pretty_generate(a)
+file =  File.open("json/tf.json", "w+") do |text_json|
   text_json.puts("#{tf_json}")
+end
+
+include Math
+
+# IDF
+idf = {}
+tf.each do |text|
+  text[1].each do |word|
+    if idf[word[0]].nil?
+      idf[word[0]] = 1
+    else
+      idf[word[0]] += 1
+    end
+  end
+end
+num = 64
+idf.each do |word|
+  idf[word[0]] = log(num.to_f / idf[word[0]].to_f)
+end
+
+b = idf.first(3)
+idf_json = JSON.pretty_generate(b)
+file = File.open("json/idf.json", "w+") do |text_json|
+  text_json.puts ("#{idf_json}")
 end
