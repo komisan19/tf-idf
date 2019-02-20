@@ -30,7 +30,7 @@ end
 # JSON
 tf_json = JSON.pretty_generate(tf)
 file =  File.open("json/tf.json", "w+") do |text_json|
-  text_json.puts("#{tf_json}")
+  text_json.puts ("#{tf_json}")
 end
 
 include Math
@@ -52,6 +52,28 @@ idf.each do |word|
 end
 
 idf_json = JSON.pretty_generate(idf)
-file = File.open("json/idf.json", "w+") do |text_json|
+File.open("json/idf.json", "w+") do |text_json|
   text_json.puts ("#{idf_json}")
 end
+
+# TF-IDF
+tfidf = {}
+tf.each do |text|
+  tfidf[text[0]] = {}
+  text[1].each do |word|
+    tfidf[text[0]][word[0]] = word[1] * idf[word[0]]
+  end
+end
+
+tfidf_json = JSON.pretty_generate(tfidf)
+File.open("json/tfidf.json", "w+") do |text_json|
+  text_json.puts ("#{tfidf_json}")
+end
+
+File.open("json/sort_data.json", "w+") do |text_json|
+  results = idf.sort {|a,b| a[1] <=> b[1]}
+  results[1..10].each do |result|
+    text_json.puts "#{result[0]}\t#{result[1]}"
+  end
+end
+
