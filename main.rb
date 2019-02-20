@@ -70,7 +70,8 @@ File.open("json/tfidf.json", "w+") do |text_json|
   text_json.puts ("#{tfidf_json}")
 end
 
-File.open("json/sort_data.json", "w+") do |text_json|
+# Sortしたやつ
+File.open("json/sort_data_idf.json", "w+") do |text_json|
   results = idf.sort {|a,b| a[1] <=> b[1]}
   results[1..10].each do |result|
     text_json.puts "#{result[0]}\t#{result[1]}"
