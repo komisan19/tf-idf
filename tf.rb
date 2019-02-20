@@ -26,7 +26,6 @@ texts.each do |text|
 end
 
 # JSON
-a = tf.first(3)
 tf_json = JSON.pretty_generate(a)
 file =  File.open("json/tf.json", "w+") do |text_json|
   text_json.puts("#{tf_json}")
@@ -50,7 +49,6 @@ idf.each do |word|
   idf[word[0]] = log(num.to_f / idf[word[0]].to_f)
 end
 
-b = idf.first(3)
 idf_json = JSON.pretty_generate(b)
 file = File.open("json/idf.json", "w+") do |text_json|
   text_json.puts ("#{idf_json}")
